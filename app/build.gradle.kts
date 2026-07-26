@@ -19,7 +19,25 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            val keystoreFile = file("shijian-keystore.jks")
+            if (keystoreFile.exists()) {
+                storeFile = keystoreFile
+                storePassword = System.getenv("KEYSTORE_PASSWORD") ?: "shijian123"
+                keyAlias = System.getenv("KEY_ALIAS") ?: "shijian"
+                keyPassword = System.getenv("KEY_PASSWORD") ?: "shijian123"
+            } else {
+                // keystore 不存在时使用调试签名（CI 中非 tag 推送时）
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            isMinifyEnabled = false
+            applicationIdSuffix = ".debug"
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -27,6 +45,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.findByName("release")
         }
     }
 

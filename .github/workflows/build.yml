@@ -57,43 +57,34 @@ jobs:
           retention-days: 7
 
       # ── Release APK（仅打 tag 时触发）──
-      - name: 构建 Release APK
+      - name: 解码签名 Keystore
         if: startsWith(github.ref, 'refs/tags/v')
-        run: gradle assembleRelease --stacktrace
-
-      - name: 签名 Release APK
-        if: startsWith(github.ref, 'refs/tags/v') && env.KEYSTORE_BASE64 != ''
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > app/shijian-keystore.jks
+          chmod 600 app/shijian-keystore.jks
+
+      - name: 构建 Release APK
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > keystore.jks
-          jarsigner -verbose \
-            -keystore keystore.jks \
-            -storepass "$KEYSTORE_PASSWORD" \
-            -keypass "$KEY_PASSWORD" \
-            -signedjar app/build/outputs/apk/release/shijian-release-signed.apk \
-            app/build/outputs/apk/release/*-unsigned.apk \
-            "$KEY_ALIAS"
+        run: gradle assembleRelease --stacktrace
 
       - name: 上传 Release APK
         if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
           name: shijian-release
-          path: |
-            app/build/outputs/apk/release/*signed*.apk
-            app/build/outputs/apk/release/*.apk
+          path: app/build/outputs/apk/release/*.apk
           retention-days: 90
 
       - name: 创建 GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            app/build/outputs/apk/release/*signed*.apk
-            app/build/outputs/apk/release/*.apk
+          files: app/build/outputs/apk/release/*.apk
           generate_release_notes: true
           make_latest: true
