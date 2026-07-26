@@ -44,9 +44,9 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: 生成 Gradle Wrapper
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: 8.7
+          gradle-version: 9.5.0
           cache-read-only: false
 
       - name: 构建 Debug APK
