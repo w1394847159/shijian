@@ -222,17 +222,17 @@ fun DiscoverScreen(
 
                     val weekDays = remember {
                         listOf(
-                            "周一" to "静夜思" to true,
-                            "周二" to "将进酒" to true,
-                            "周三" to "水调歌头" to false,
-                            "周四" to "春晓" to true,
-                            "周五" to "江雪" to false,
-                            "周六" to "望月怀远" to true,
-                            "今日" to "月下独酌" to true,
+                            Triple("周一", "静夜思", true),
+                            Triple("周二", "将进酒", true),
+                            Triple("周三", "水调歌头", false),
+                            Triple("周四", "春晓", true),
+                            Triple("周五", "江雪", false),
+                            Triple("周六", "望月怀远", true),
+                            Triple("今日", "月下独酌", true),
                         )
                     }
 
-                    weekDays.forEach { ((day, title), isRead) ->
+                    weekDays.forEach { (day, title, isRead) ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
