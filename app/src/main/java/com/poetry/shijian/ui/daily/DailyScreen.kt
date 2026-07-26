@@ -119,13 +119,16 @@ fun DailyScreen(
                 transitionSpec = {
                     when (animationTarget) {
                         AnimationTarget.Next -> {
-                            (slideInVertically { it } + slideOutVertically { -it }).togetherWith(tween(400))
+                            (slideInVertically(tween(400)) { it }) togetherWith
+                                (slideOutVertically(tween(400)) { -it })
                         }
                         AnimationTarget.Previous -> {
-                            (slideInVertically { -it } + slideOutVertically { it }).togetherWith(tween(400))
+                            (slideInVertically(tween(400)) { -it }) togetherWith
+                                (slideOutVertically(tween(400)) { it })
                         }
                         AnimationTarget.None -> {
-                            (slideInVertically { it / 3 } + slideOutVertically { -it / 3 }).togetherWith(tween(300))
+                            (slideInVertically(tween(300)) { it / 3 }) togetherWith
+                                (slideOutVertically(tween(300)) { -it / 3 })
                         }
                     }
                 },

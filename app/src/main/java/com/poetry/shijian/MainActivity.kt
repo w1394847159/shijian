@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.poetry.shijian.navigation.BottomNavItem
@@ -89,7 +90,7 @@ private fun ShijianBottomBar(
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        tonalElevation = androidx.compose.ui.unit.dp.times(0),
+        tonalElevation = 0.dp,
     ) {
         BottomNavItem.items.forEach { item ->
             val selected = currentRoute == item.route
